@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Search, Target, NotebookPen, Brain, Network, TrendingUp } from "lucide-react";
+import { LayoutDashboard, Search, Target, NotebookPen, Brain, Network, TrendingUp, Columns3 } from "lucide-react";
 import { AGENTS } from "@/lib/agents";
 import { Avatar } from "@/components/Avatar";
 
@@ -66,6 +66,11 @@ export function Sidebar() {
       <p className="mb-1 mt-5 px-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
         Self
       </p>
+      <NavRow href="/kanban" active={isActive("/kanban")} label="Kanban">
+        <span className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--border)] text-muted">
+          <Columns3 className="h-[17px] w-[17px]" />
+        </span>
+      </NavRow>
       <NavRow href="/seo" active={isActive("/seo")} label="SEO">
         <span className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--border)] text-muted">
           <TrendingUp className="h-[17px] w-[17px]" />

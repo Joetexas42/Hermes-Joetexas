@@ -3,7 +3,11 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 
-export const HERMES_ROOT  = path.join(os.homedir(), ".hermes");
+// On Windows, Hermes installs to %LOCALAPPDATA%\hermes, not ~/.hermes
+export const HERMES_ROOT =
+  process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA ?? path.join(os.homedir(), "AppData", "Local"), "hermes")
+    : path.join(os.homedir(), ".hermes");
 export const MINIMAX_BASE = "https://api.minimax.io/v1";
 
 export function activeProfile(): string {
@@ -31,15 +35,21 @@ export const PREVIEW_BUCKET = {
 } as const;
 
 export function minimaxToken(): string | null {
-  const prof = activeProfile();
-  try {
-    const { readFileSync } = require("node:fs") as typeof import("node:fs");
-    const auth = JSON.parse(
-      readFileSync(path.join(HERMES_ROOT, "profiles", prof, "auth.json"), "utf8"),
-    );
-    const mm = auth?.providers?.["minimax-oauth"] ?? auth?.providers?.minimax;
-    return (mm?.access_token as string) ?? null;
-  } catch { return null; }
+  const { readFileSync } = require("node:fs") as typeof import("node:fs");
+  // Try root auth.json first (Windows install layout), then profiles subfolder (macOS/Linux)
+  const candidates = [
+    path.join(HERMES_ROOT, "auth.json"),
+    path.join(HERMES_ROOT, "profiles", activeProfile(), "auth.json"),
+  ];
+  for (const p of candidates) {
+    try {
+      const auth = JSON.parse(readFileSync(p, "utf8"));
+      const mm = auth?.providers?.["minimax-oauth"] ?? auth?.providers?.minimax;
+      const tok = mm?.access_token as string | undefined;
+      if (tok) return tok;
+    } catch { /* try next */ }
+  }
+  return null;
 }
 
 export function slugify(s: string): string {
