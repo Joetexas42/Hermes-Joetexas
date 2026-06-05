@@ -1,0 +1,62 @@
+# ─────────────────────────────────────────────────────────────────────────
+# Agentic OS — Hostinger VPS deployment
+#
+# Usage on the VPS:
+#   git clone https://github.com/Joetexas42/Hermes-Joetexas.git agentic-os
+#   cd agentic-os
+#   cp .env.example .env       # then edit and set AGENTIC_OS_PASSWORD
+#   docker compose up -d --build
+#
+# Exposes the app on port 3000 inside Docker. Traefik (already running on
+# the VPS) sees the labels below and routes a public HTTPS subdomain to it.
+# ─────────────────────────────────────────────────────────────────────────
+
+services:
+  agentic-os:
+    build: .
+    image: agentic-os:latest
+    container_name: agentic-os
+    restart: unless-stopped
+
+    environment:
+      # Single-user password. Without this, auth is disabled.
+      AGENTIC_OS_PASSWORD: ${AGENTIC_OS_PASSWORD:?set AGENTIC_OS_PASSWORD in .env}
+      # Optional: separate signing secret for cookies. Defaults to password.
+      AGENTIC_OS_SECRET:   ${AGENTIC_OS_SECRET:-}
+
+      # Vault root — defaults to a local folder inside the container, persisted
+      # via the .data volume. Override to point at a mounted Drive / rclone mount.
+      AGENTIC_OS_VAULT:    ${AGENTIC_OS_VAULT:-/app/.data/vault}
+
+      # Where the dashboard's Hermes chat talks to. On this VPS, Hermes runs in
+      # the hermes-agent-gn0b project — Traefik already serves it publicly.
+      AGENTIC_OS_HERMES_URL: ${AGENTIC_OS_HERMES_URL:-https://hermes-agent-gn0b.srv1344233.hstgr.cloud}
+
+      NODE_ENV: production
+      PORT: "3000"
+
+    volumes:
+      # Persistent app state (Kanban DB, goals, journal, etc.)
+      - agentic-os-data:/app/.data
+
+    networks:
+      - traefik-net
+
+    labels:
+      - "traefik.enable=true"
+      # Subdomain-based routing — same pattern Hostinger uses for hermes-agent-gn0b
+      - "traefik.http.routers.agentic-os.rule=Host(`agentic-os.srv1344233.hstgr.cloud`)"
+      - "traefik.http.routers.agentic-os.entrypoints=websecure"
+      - "traefik.http.routers.agentic-os.tls=true"
+      - "traefik.http.routers.agentic-os.tls.certresolver=letsencrypt"
+      - "traefik.http.services.agentic-os.loadbalancer.server.port=3000"
+
+volumes:
+  agentic-os-data:
+
+networks:
+  traefik-net:
+    external: true
+    # Adjust this name if Traefik's network is called something different on
+    # your VPS. Common names: traefik, traefik-pgbv_default, web.
+    name: traefik-pgbv_default

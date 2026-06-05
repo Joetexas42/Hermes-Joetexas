@@ -6,6 +6,15 @@
 /.swarm-state.json
 /.data
 /setup-token.log
+/hermes-auth-out.txt
+/hermes-auth-err.txt
+/claude-token-out.txt
+/claude-token-err.txt
+
+# environment variables (never commit secrets)
+/.env
+/.env.local
+/.env.production
 
 # dependencies
 /node_modules
