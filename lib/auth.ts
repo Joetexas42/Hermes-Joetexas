@@ -13,16 +13,20 @@
 export const COOKIE_NAME = "agentic-os-session";
 
 function secret(): string {
+  // Use ||, not ??: Docker Compose passes unset env vars as "" (empty string),
+  // not undefined. Empty string is "nullish-truthy" so ?? wouldn't fall through,
+  // and we'd feed a zero-byte key to crypto.subtle.importKey (DataError).
   return (
-    process.env.AGENTIC_OS_SECRET ??
-    process.env.AGENTIC_OS_PASSWORD ??
+    process.env.AGENTIC_OS_SECRET ||
+    process.env.AGENTIC_OS_PASSWORD ||
     "dev-secret-do-not-use-in-prod"
   );
 }
 
-/** Auth is only required when AGENTIC_OS_PASSWORD is set. */
+/** Auth is only required when AGENTIC_OS_PASSWORD is set AND non-empty. */
 export function authRequired(): boolean {
-  return Boolean(process.env.AGENTIC_OS_PASSWORD);
+  const p = process.env.AGENTIC_OS_PASSWORD;
+  return typeof p === "string" && p.length > 0;
 }
 
 const enc = new TextEncoder();
