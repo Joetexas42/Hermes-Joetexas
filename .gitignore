@@ -1,5 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# agentic-os runtime state (local, never commit)
+/.bridge-state.json
+/.vault-state.json
+/.swarm-state.json
+/.data
+/setup-token.log
+
 # dependencies
 /node_modules
 /.pnp

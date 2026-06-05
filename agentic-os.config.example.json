@@ -1,0 +1,23 @@
+{
+  "_comment": "Copy this to ~/.agentic-os/config.json and fill in your paths.",
+  "_comment2": "All fields are optional — omit any you don't need.",
+
+  "claude":       null,
+  "openclaw":     null,
+  "hermes":       null,
+  "gemini":       null,
+  "antigravity":  null,
+  "codex":        null,
+  "fcc":          null,
+
+  "vaultRoot":    "G:\\My Drive\\DO NOT DELETE\\Joe Hermes\\Vault",
+
+  "openclawLogs": null,
+  "hermesLogs":   null,
+
+  "locationLabel": "Bangkok",
+
+  "goalCategories": ["Health", "Personal", "Work", "Learning", "Side Project"],
+
+  "claudeModel": "claude-opus-4-8"
+}
