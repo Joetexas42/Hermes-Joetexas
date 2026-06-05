@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Search, Target, NotebookPen, Brain, Network, TrendingUp, Columns3 } from "lucide-react";
+import { LayoutDashboard, Search, Target, NotebookPen, Brain, Network, TrendingUp, Columns3, Cloud } from "lucide-react";
 import { AGENTS } from "@/lib/agents";
 import { Avatar } from "@/components/Avatar";
 
@@ -62,6 +62,15 @@ export function Sidebar() {
           <p className="px-2 py-3 text-[12px] text-[var(--faint)]">No agents match.</p>
         )}
       </nav>
+
+      <p className="mb-1 mt-5 px-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
+        Cloud
+      </p>
+      <NavRow href="/vps-hermes" active={isActive("/vps-hermes")} label="Hermes · VPS" sub="Hostinger · deepseek-v4-flash">
+        <span className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--border)] text-muted">
+          <Cloud className="h-[17px] w-[17px]" />
+        </span>
+      </NavRow>
 
       <p className="mb-1 mt-5 px-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
         Self
