@@ -14,11 +14,11 @@ export const config = {
   ],
 };
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   if (!authRequired()) return NextResponse.next();
 
   const token = req.cookies.get(COOKIE_NAME)?.value;
-  if (verifyToken(token)) return NextResponse.next();
+  if (await verifyToken(token)) return NextResponse.next();
 
   // Redirect HTML page requests to /login; reject API requests with 401
   const isApi = req.nextUrl.pathname.startsWith("/api/");
