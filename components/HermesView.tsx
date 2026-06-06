@@ -74,7 +74,14 @@ function ChatTab() {
             patchLast((m) => ({ ...m, content: clean }));
           }
           else if (evt.type === "done")  patchLast((m) => ({ ...m, streaming: false }));
-          else if (evt.type === "error") patchLast((m) => ({ ...m, streaming: false, content: m.content || `⚠ ${evt.message}` }));
+          else if (evt.type === "error") patchLast((m) => ({
+            ...m,
+            streaming: false,
+            content: m.content ||
+              (evt.message?.includes("Hermes·VPS") || evt.message?.includes("not reachable")
+                ? `⚠ ${evt.message}\n\n→ Open the Hermes·VPS terminal: /vps-hermes`
+                : `⚠ ${evt.message}`),
+          }));
         }
       }
       if (full) historyRef.current.push({ role: "assistant", content: full });

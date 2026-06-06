@@ -41,12 +41,18 @@ export function openRouterKey(): string | null {
 }
 
 /**
- * The Hermes proxy runs on localhost:8645 and exposes an OpenAI-compatible API
- * authenticated via Nous Portal (which IS active on this machine).
+ * The Hermes proxy exposes an OpenAI-compatible API authenticated via Nous Portal.
+ * On the local dev machine it runs on http://127.0.0.1:8645 (started via
+ * `hermes proxy start`). On a remote deployment (Hostinger VPS, etc.) point at
+ * the deployed proxy URL via the AGENTIC_OS_HERMES_PROXY env var.
+ *
+ * If no proxy URL is reachable, the chat route returns a friendly error and
+ * the UI suggests using the embedded Hermes terminal at /vps-hermes instead.
+ *
  * The proxy accepts any bearer token — the string "hermes" is conventional.
  */
-export const PROXY_BASE  = "http://127.0.0.1:8645/v1";
-export const PROXY_TOKEN = "hermes";
+export const PROXY_BASE  = process.env.AGENTIC_OS_HERMES_PROXY?.replace(/\/+$/, "") || "http://127.0.0.1:8645/v1";
+export const PROXY_TOKEN = process.env.AGENTIC_OS_HERMES_TOKEN || "hermes";
 export const HERMES_MODEL = "minimax/minimax-m2.7";
 
 export interface ChatMessage { role: "user" | "assistant" | "system"; content: string }
@@ -101,6 +107,19 @@ export async function hermesChat(
     }
     return { ok: true };
   } catch (e) {
-    return { ok: false, error: String(e) };
+    // Most common cause in the wild: the proxy URL points at localhost on a
+    // deployed (VPS) instance where no proxy is running. Detect that and give
+    // a useful error rather than an opaque "fetch failed".
+    const msg = e instanceof Error ? e.message : String(e);
+    const usingLocalhost = /127\.0\.0\.1|localhost/.test(PROXY_BASE);
+    if (usingLocalhost && /fetch failed|ECONNREFUSED/i.test(msg)) {
+      return {
+        ok: false,
+        error: "Hermes proxy not reachable. This dashboard is configured to reach a Hermes proxy at " +
+               `${PROXY_BASE} but nothing is responding. On the VPS, use the Hermes·VPS terminal (/vps-hermes) — ` +
+               "it's a full Hermes Agent UI and works right now.",
+      };
+    }
+    return { ok: false, error: msg };
   }
 }
