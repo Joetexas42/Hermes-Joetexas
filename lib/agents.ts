@@ -40,13 +40,13 @@ export const AGENTS: Agent[] = [
   {
     slug: "openclaw",
     name: "OpenClaw",
-    tagline: "Creative cockpit — image, voice, video, X-search.",
-    role: "Creative studio",
+    tagline: "Creative cockpit — image, voice, video generation via MiniMax.",
+    role: "Creative studio · MiniMax",
     accent: "#e8389b",
     gradient: ["#f0468f", "#8b5cf6"],
     icon: "orbit",
-    status: "stub",
-    connection: "Not connected yet. Tell me what OpenClaw exposes and I'll wire it.",
+    status: "live",
+    connection: "Chat + Studio via MiniMax (image-01, speech-02-hd, Hailuo-2.3).",
   },
   {
     slug: "hermes",
