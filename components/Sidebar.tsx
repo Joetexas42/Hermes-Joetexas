@@ -105,7 +105,12 @@ export function Sidebar() {
           <Network className="h-[17px] w-[17px]" />
         </span>
       </NavRow>
-      <NavRow href="/import/chatgpt" active={isActive("/import")} label="Import" sub="ChatGPT history">
+      <NavRow href="/import/chatgpt" active={pathname.startsWith("/import/chatgpt")} label="Import ChatGPT" sub="conversations.json">
+        <span className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--border)] text-muted">
+          <Inbox className="h-[17px] w-[17px]" />
+        </span>
+      </NavRow>
+      <NavRow href="/import/grok" active={pathname.startsWith("/import/grok")} label="Import Grok" sub="prod-grok-backend.json">
         <span className="grid h-8 w-8 place-items-center rounded-lg border border-[var(--border)] text-muted">
           <Inbox className="h-[17px] w-[17px]" />
         </span>

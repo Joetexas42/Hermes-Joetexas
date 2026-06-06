@@ -19,6 +19,7 @@ const PAGE_COMMANDS: Command[] = [
   { id: "settings", kind: "page", label: "Settings",        href: "/settings", icon: "settings",         keywords: ["bridge", "vault", "token", "config"] },
   { id: "vps",      kind: "page", label: "Hermes · VPS",     href: "/vps-hermes", icon: "cloud",         keywords: ["vps", "hostinger", "remote", "docker", "cloud", "deepseek"] },
   { id: "import-chatgpt", kind: "page", label: "Import ChatGPT", href: "/import/chatgpt", icon: "inbox",    keywords: ["chatgpt", "import", "conversations", "history", "export", "openai"] },
+  { id: "import-grok",    kind: "page", label: "Import Grok",    href: "/import/grok",    icon: "inbox",    keywords: ["grok", "import", "x", "twitter", "conversations", "history", "export"] },
   { id: "kanban",   kind: "page", label: "Kanban",           href: "/kanban",   icon: "columns-3",        keywords: ["tasks", "board", "todo", "triage", "done"] },
   { id: "x-search", kind: "page", label: "X-Search",         href: "/x-search", icon: "at-sign",          keywords: ["grok", "twitter", "x", "search", "live", "social"] },
   { id: "seo",      kind: "page", label: "SEO Suite",        href: "/seo",      icon: "trending-up",      keywords: ["blog", "articles", "keyword", "transcript", "deploy", "netlify", "goldie"] },
