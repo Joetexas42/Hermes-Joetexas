@@ -28,8 +28,14 @@ services:
       # Vault path inside the container — persists via the .data volume.
       AGENTIC_OS_VAULT:    ${AGENTIC_OS_VAULT:-/app/.data/vault}
 
-      # Where the dashboard's Hermes chat talks to. Defaults to your VPS Hermes.
+      # Where the dashboard's Hermes chat talks to (public web UI, for the iframe embed).
       AGENTIC_OS_HERMES_URL: ${AGENTIC_OS_HERMES_URL:-https://hermes-agent-gn0b.srv1344233.hstgr.cloud}
+
+      # Where the dashboard's chat client sends OpenAI-compatible requests.
+      # On the VPS this points cross-container at the Hermes proxy running inside
+      # the hermes-agent-gn0b container on port 8645 (started via `hermes proxy start`).
+      AGENTIC_OS_HERMES_PROXY: ${AGENTIC_OS_HERMES_PROXY:-http://hermes-agent-gn0b-hermes-agent-1:8645/v1}
+      AGENTIC_OS_HERMES_TOKEN: ${AGENTIC_OS_HERMES_TOKEN:-hermes}
 
       NODE_ENV: production
       PORT: "3000"
@@ -37,6 +43,10 @@ services:
     volumes:
       # Persistent state: Kanban SQLite, vault, goals, journal, swarm, settings.
       - agentic-os-data:/app/.data
+
+    networks:
+      - default
+      - hermes-net
 
     labels:
       - "traefik.enable=true"
@@ -49,3 +59,12 @@ services:
 
 volumes:
   agentic-os-data:
+
+networks:
+  # Project's own private network for the container.
+  default:
+  # External network created by the hermes-agent-gn0b compose project.
+  # Joining it lets us reach the Hermes container by its DNS name.
+  hermes-net:
+    name: hermes-agent-gn0b_default
+    external: true
