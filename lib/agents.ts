@@ -62,13 +62,13 @@ export const AGENTS: Agent[] = [
   {
     slug: "gemini",
     name: "Gemini",
-    tagline: "Google's multimodal model.",
-    role: "Multimodal",
+    tagline: "Google's multimodal model — Gemini 2.5 Flash.",
+    role: "Gemini 2.5 Flash · Google",
     accent: "#8b5cf6",
     gradient: ["#8b5cf6", "#ec4899"],
     icon: "gem",
-    status: "stub",
-    connection: "Not connected yet. Add a GEMINI_API_KEY and I'll bridge it.",
+    status: "live",
+    connection: "Streaming chat via Google Gemini API (gemini-2.5-flash).",
   },
   {
     slug: "antigravity",

@@ -14,6 +14,28 @@ interface Msg {
   cost?: number | null;
 }
 
+/** Map agent slugs to their chat API endpoints + body builders. */
+const AGENT_ENDPOINTS: Record<string, {
+  url: string;
+  body: (prompt: string, history: Msg[], sessionId: string | null) => unknown;
+}> = {
+  claude: {
+    url: "/api/claude",
+    body: (prompt, _h, sessionId) => ({ prompt, sessionId }),
+  },
+  gemini: {
+    url: "/api/chat/gemini",
+    body: (prompt, history) => ({
+      messages: [
+        ...history
+          .filter((m) => m.role !== "system")
+          .map((m) => ({ role: m.role, content: m.content })),
+        { role: "user" as const, content: prompt },
+      ],
+    }),
+  },
+};
+
 export function ChatView({ agent }: { agent: Agent }) {
   const live = agent.status === "live";
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -73,10 +95,11 @@ export function ChatView({ agent }: { agent: Agent }) {
     abortRef.current = controller;
 
     try {
-      const res = await fetch("/api/claude", {
+      const ep = AGENT_ENDPOINTS[agent.slug] ?? AGENT_ENDPOINTS.claude;
+      const res = await fetch(ep.url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt, sessionId }),
+        body: JSON.stringify(ep.body(prompt, messages, sessionId)),
         signal: controller.signal,
       });
       if (!res.body) throw new Error("No response stream.");
@@ -292,12 +315,20 @@ export function ChatView({ agent }: { agent: Agent }) {
 }
 
 function EmptyState({ agent, onPick }: { agent: Agent; onPick: (p: string) => void }) {
+  const promptMap: Record<string, string[]> = {
+    claude: [
+      "What's in my current working directory?",
+      "Summarize what this Agentic OS app does.",
+      "Give me 3 ideas for the next agent to dock in.",
+    ],
+    gemini: [
+      "Explain quantum computing in 3 sentences.",
+      "Compare Next.js and Remix for a dashboard app.",
+      "Write a Python script that finds duplicate files.",
+    ],
+  };
   const prompts = agent.status === "live"
-    ? [
-        "What's in my current working directory?",
-        "Summarize what this Agentic OS app does.",
-        "Give me 3 ideas for the next agent to dock in.",
-      ]
+    ? (promptMap[agent.slug] ?? promptMap.claude)
     : [];
   return (
     <div className="mt-12 flex flex-col items-center text-center">

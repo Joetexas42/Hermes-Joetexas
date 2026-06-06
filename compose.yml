@@ -37,6 +37,9 @@ services:
       AGENTIC_OS_HERMES_PROXY: ${AGENTIC_OS_HERMES_PROXY:-http://hermes-agent-gn0b-hermes-agent-1:8645/v1}
       AGENTIC_OS_HERMES_TOKEN: ${AGENTIC_OS_HERMES_TOKEN:-hermes}
 
+      # Google Gemini API key (free tier: 2M tokens/day on 2.5 Flash).
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+
       NODE_ENV: production
       PORT: "3000"
 
