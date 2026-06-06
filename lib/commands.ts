@@ -20,6 +20,7 @@ const PAGE_COMMANDS: Command[] = [
   { id: "vps",      kind: "page", label: "Hermes · VPS",     href: "/vps-hermes", icon: "cloud",         keywords: ["vps", "hostinger", "remote", "docker", "cloud", "deepseek"] },
   { id: "import-chatgpt", kind: "page", label: "Import ChatGPT", href: "/import/chatgpt", icon: "inbox",    keywords: ["chatgpt", "import", "conversations", "history", "export", "openai"] },
   { id: "kanban",   kind: "page", label: "Kanban",           href: "/kanban",   icon: "columns-3",        keywords: ["tasks", "board", "todo", "triage", "done"] },
+  { id: "x-search", kind: "page", label: "X-Search",         href: "/x-search", icon: "at-sign",          keywords: ["grok", "twitter", "x", "search", "live", "social"] },
   { id: "seo",      kind: "page", label: "SEO Suite",        href: "/seo",      icon: "trending-up",      keywords: ["blog", "articles", "keyword", "transcript", "deploy", "netlify", "goldie"] },
   { id: "swarm",    kind: "page", label: "Swarm Topology",  href: "/swarm",    icon: "network",          keywords: ["ruflo", "agents", "swarm", "orbital", "topology"] },
   { id: "memory",   kind: "page", label: "Memory Graph",    href: "/memory",   icon: "brain",            keywords: ["vault", "graph", "3d", "knowledge", "obsidian"] },

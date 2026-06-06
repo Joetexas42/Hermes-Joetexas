@@ -64,6 +64,7 @@ export interface ChatMessage { role: "user" | "assistant" | "system"; content: s
 export async function hermesChat(
   messages: ChatMessage[],
   onToken: (token: string) => void,
+  opts?: { model?: string; maxTokens?: number },
 ): Promise<{ ok: boolean; error?: string }> {
   try {
     const res = await fetch(`${PROXY_BASE}/chat/completions`, {
@@ -73,10 +74,10 @@ export async function hermesChat(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: HERMES_MODEL,
+        model: opts?.model ?? HERMES_MODEL,
         messages,
         stream: true,
-        max_tokens: 2048,
+        max_tokens: opts?.maxTokens ?? 2048,
       }),
     });
 
