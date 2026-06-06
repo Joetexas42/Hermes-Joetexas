@@ -32,7 +32,7 @@ function LoginForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
-      if (r.ok) { router.push(next); router.refresh(); }
+      if (r.ok) { window.location.href = next; }
       else { setError("Wrong password."); setBusy(false); }
     } catch (e) { setError(String(e)); setBusy(false); }
   };
